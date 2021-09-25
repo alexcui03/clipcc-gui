@@ -11,6 +11,7 @@ import VM from 'clipcc-vm';
 import Renderer from 'scratch-render';
 
 import Blocks from '../../containers/blocks.jsx';
+import CodeTab from '../../containers/code-tab.jsx';
 import CostumeTab from '../../containers/costume-tab.jsx';
 import TargetPane from '../../containers/target-pane.jsx';
 import SoundTab from '../../containers/sound-tab.jsx';
@@ -80,6 +81,7 @@ const GUIComponent = props => {
         canShare,
         canUseCloud,
         children,
+        codeTabVisible,
         connectionModalVisible,
         costumeLibraryVisible,
         costumesTabVisible,
@@ -104,6 +106,7 @@ const GUIComponent = props => {
         onToggleLoginOpen,
         onActivateCostumesTab,
         onActivateSoundsTab,
+        onActivateCodeTab,
         onActivateTab,
         onClickLogo,
         onExtensionButtonClick,
@@ -172,9 +175,9 @@ const GUIComponent = props => {
                                 src={codeIcon}
                             />
                             <FormattedMessage
-                                defaultMessage="Code"
-                                description="Button to get to the code panel"
-                                id="gui.gui.codeTab"
+                                defaultMessage="Block"
+                                description="Button to get to the block panel"
+                                id="gui.gui.blockTab"
                             />
                         </Tab>
                         <Tab
@@ -211,6 +214,20 @@ const GUIComponent = props => {
                                 defaultMessage="Sounds"
                                 description="Button to get to the sounds panel"
                                 id="gui.gui.soundsTab"
+                            />
+                        </Tab>
+                        <Tab
+                            className={tabClassNames.tab}
+                            onClick={onActivateCodeTab}
+                        >
+                            <img
+                                draggable={false}
+                                src={codeIcon}
+                            />
+                            <FormattedMessage
+                                defaultMessage="Code"
+                                description="Button to get to the code panel"
+                                id="gui.gui.codeTab"
                             />
                         </Tab>
                     </TabList>
@@ -250,6 +267,9 @@ const GUIComponent = props => {
                     </TabPanel>
                     <TabPanel className={tabClassNames.tabPanel}>
                         {soundsTabVisible ? <SoundTab vm={vm} /> : null}
+                    </TabPanel>
+                    <TabPanel className={tabClassNames.tabPanel}>
+                        {codeTabVisible ? <CodeTab vm={vm} /> : null}
                     </TabPanel>
                 </Tabs>
                 {backpackVisible ? (
@@ -414,6 +434,7 @@ GUIComponent.propTypes = {
     canUseCloud: PropTypes.bool,
     cardsVisible: PropTypes.bool,
     children: PropTypes.node,
+    codeTabVisible: PropTypes.bool,
     costumeLibraryVisible: PropTypes.bool,
     costumesTabVisible: PropTypes.bool,
     contributorModalVisible: PropTypes.bool,
@@ -428,6 +449,7 @@ GUIComponent.propTypes = {
     logo: PropTypes.string,
     onActivateCostumesTab: PropTypes.func,
     onActivateSoundsTab: PropTypes.func,
+    onActivateCodeTab: PropTypes.func,
     onActivateTab: PropTypes.func,
     onClickAccountNav: PropTypes.func,
     onClickLogo: PropTypes.func,

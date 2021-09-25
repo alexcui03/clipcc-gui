@@ -7,6 +7,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const ServiceWorkerWebpackPlugin = require('serviceworker-webpack-plugin');
+const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
 
 // PostCss
 const autoprefixer = require('autoprefixer');
@@ -93,6 +94,9 @@ const base = {
                     }
                 }
             }]
+        }, {
+            test: /codicon\.ttf$/,
+            use: ['file-loader']
         }]
     },
     optimization: {
@@ -162,7 +166,8 @@ function getPlugins() {
         new CopyWebpackPlugin([{
             from: 'extension-worker.{js,js.map}',
             context: 'node_modules/clipcc-vm/dist/web'
-        }])
+        }]),
+        new MonacoWebpackPlugin()
     ]);
     if (ENABLE_PWA) {
         res = res.concat([

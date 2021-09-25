@@ -15,7 +15,8 @@ import {
     activateTab,
     BLOCKS_TAB_INDEX,
     COSTUMES_TAB_INDEX,
-    SOUNDS_TAB_INDEX
+    SOUNDS_TAB_INDEX,
+    CODE_TAB_INDEX
 } from '../reducers/editor-tab';
 import {getSetting} from '../reducers/settings';
 
@@ -181,6 +182,7 @@ const mapStateToProps = state => {
         connectionModalVisible: state.scratchGui.modals.connectionModal,
         costumeLibraryVisible: state.scratchGui.modals.costumeLibrary,
         costumesTabVisible: state.scratchGui.editorTab.activeTabIndex === COSTUMES_TAB_INDEX,
+        codeTabVisible: state.scratchGui.editorTab.activeTabIndex === CODE_TAB_INDEX,
         darkMode: darkMode,
         error: state.scratchGui.projectState.error,
         isError: getIsError(loadingState),
@@ -211,6 +213,7 @@ const mapDispatchToProps = dispatch => ({
     onActivateTab: tab => dispatch(activateTab(tab)),
     onActivateCostumesTab: () => dispatch(activateTab(COSTUMES_TAB_INDEX)),
     onActivateSoundsTab: () => dispatch(activateTab(SOUNDS_TAB_INDEX)),
+    onActivateCodeTab: () => dispatch(activateTab(CODE_TAB_INDEX)),
     onRequestCloseBackdropLibrary: () => dispatch(closeBackdropLibrary()),
     onRequestCloseCostumeLibrary: () => dispatch(closeCostumeLibrary()),
     onRequestCloseTelemetryModal: () => dispatch(closeTelemetryModal()),
