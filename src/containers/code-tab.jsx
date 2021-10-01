@@ -1,65 +1,67 @@
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { createRef } from 'react';
 import bindAll from 'lodash.bindall';
 import {defineMessages, intlShape, injectIntl} from 'react-intl';
 import {connect} from 'react-redux';
 import VM from 'clipcc-vm';
-import Editor from "@monaco-editor/react";
+import Script from 'clipcc-script';
+import * as monaco from 'monaco-editor';
+import 'monaco-editor/min/vs/editor/editor.main.css';
 
 import errorBoundaryHOC from '../lib/error-boundary-hoc.jsx';
-import DOMElementRenderer from './dom-element-renderer.jsx';
 
 class CodeTab extends React.Component {
     constructor (props) {
         super(props);
-        /*bindAll(this, [
-            'componentDidMount'
-        ]);*/
+        bindAll(this, [
+            'attachVM',
+            'detachVM',
+            'handleContainerDidMount',
+            'onWorkspaceUpdate'
+        ]);
+
+        this.editorRef = createRef();
+        this.defaultData = '// some comment';
+        this.script = new Script.Project();
     }
 
-    componentWillReceiveProps (nextProps) {
-        const {
-            editingTarget,
-            sprites,
-            stage
-        } = nextProps;
+    componentDidMount () {
+        this.attachVM();
+    }
 
-        const target = editingTarget && sprites[editingTarget] ? sprites[editingTarget] : stage;
-        if (!target || !target.sounds) {
-            return;
+    attachVM () {
+        this.props.vm.addListener('workspaceUpdate', this.onWorkspaceUpdate);
+    }
+
+    detachVM () {
+        this.props.vm.removeListener('workspaceUpdate', this.onWorkspaceUpdate);
+    }
+
+    onWorkspaceUpdate (data) {
+        /*this.script.getScript('stage').loadFromXML(data.xml);
+        this.defaultData = this.script.getScript('stage').generateCode();
+        if (this.editorRef.current) {
+            this.editorRef.current.setValue(this.defaultData);
         }
-
-        // If switching editing targets, reset the sound index
-        /*if (this.props.editingTarget !== editingTarget) {
-            this.setState({selectedSoundIndex: 0});
-        } else if (this.state.selectedSoundIndex > target.sounds.length - 1) {
-            this.setState({selectedSoundIndex: Math.max(target.sounds.length - 1, 0)});
-        }*/
+        console.log(this.defaultData);*/
     }
 
-    componentWillMount () {
-        /*console.log(this);
-        const temp = document.createElement('div');
-        temp.setAttribute('style', 'width: 300px; height: 300px');
-        console.log(temp);
-        this.manaco = monaco.editor.create(temp, {
-            value: [
-                'function x() {',
-                '\tconsole.log("Hello world!");',
-                '}'
-            ].join('\n'),
+    handleContainerDidMount (ref) {
+        this.ref = ref;
+
+        monaco.editor.create(this.ref, {
+            value: '// CREATED',
             language: 'javascript'
         });
-        console.log(temp);
-        this.editor = temp;
-        console.log(this.editor);*/
     }
 
     render () {
-        return (<Editor
-            height="90vh"
-            defaultLanguage="javascript"
-            defaultValue="// some comment"
+        return (<div
+            ref={this.handleContainerDidMount}
+            style={{
+                width: '100%',
+                height: '100%'
+            }}
         />);
     }
 }
@@ -79,6 +81,6 @@ const mapStateToProps = state => ({
 export default errorBoundaryHOC('Code Tab')(
     injectIntl(connect(
         mapStateToProps,
-        //mapDispatchToProps
+        // mapDispatchToProps
     )(CodeTab))
 );

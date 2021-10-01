@@ -68,9 +68,9 @@ const base = {
                     '@babel/preset-react'
                 ]
             }
-        },
-        {
+        }, {
             test: /\.css$/,
+            exclude: /monaco/,
             use: [{
                 loader: 'style-loader'
             }, {
@@ -80,6 +80,30 @@ const base = {
                     importLoaders: 1,
                     localIdentName: '[name]_[local]_[hash:base64:5]',
                     camelCase: true
+                }
+            }, {
+                loader: 'postcss-loader',
+                options: {
+                    ident: 'postcss',
+                    plugins: function () {
+                        return [
+                            postcssImport,
+                            postcssVars,
+                            autoprefixer
+                        ];
+                    }
+                }
+            }]
+        }, {
+            test: /monaco.*\.css$/,
+            use: [{
+                loader: 'style-loader'
+            }, {
+                loader: 'css-loader',
+                options: {
+                    modules: true,
+                    importLoaders: 1,
+                    localIdentName: '[local]'
                 }
             }, {
                 loader: 'postcss-loader',
