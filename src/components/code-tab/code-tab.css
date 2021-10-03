@@ -1,0 +1,5 @@
+@import "../../css/colors.css";
+
+.code-panel {
+    border: 1px solid $ui-black-transparent;
+}
